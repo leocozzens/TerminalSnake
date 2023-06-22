@@ -7,7 +7,7 @@
 
 int main(void) {
     // Init window
-    Board board;
+    Board board = { .apple = NULL };
     set_win(&board);
     clear_win(board.boardWin);
     

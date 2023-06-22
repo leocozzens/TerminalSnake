@@ -5,6 +5,7 @@
 #include <ncurses.h>
 
 // C standard libraries
+#include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
 
@@ -13,14 +14,20 @@
 #define SET_BORDER(window) box(window, 0, 0)
 
 typedef struct {
+    int x;
+    int y;
+    char icon;
+} Graphic;
+
+typedef struct {
     WINDOW *boardWin;
     int height;
     int width;
+    Graphic *apple;
 } Board;
 
 void set_win(Board *board);
 void clear_win(WINDOW *boardWin);
-void add_char(WINDOW *boardWin, int y, int x, char out);
 void get_empty_locale(Board *board, int *y, int *x);
 
 #endif

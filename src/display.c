@@ -19,8 +19,8 @@ void set_win(Board *board) {
         board->height = maxY;
         board->width = board->height * 2.5;
         if(board->width > maxX || maxY < MIN_HEIGHT) {
-            fprintf(stderr, "ERROR: Terminal size too small");
             endwin();
+            fprintf(stderr, "ERROR: Terminal size too small");
             exit(1);
         }
     }
@@ -34,11 +34,6 @@ void clear_win(WINDOW *boardWin) {
     wclear(boardWin);
     SET_BORDER(boardWin);
     curs_set(0);
-    wrefresh(boardWin);
-}
-
-void add_char(WINDOW *boardWin, int y, int x, char out) {
-    mvwaddch(boardWin, y, x, out);
     wrefresh(boardWin);
 }
 

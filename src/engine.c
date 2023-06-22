@@ -1,5 +1,4 @@
 #include <engine.h>
-#include <display.h>
 
 void play_round(Board *board) {
     process_input(board->boardWin);
@@ -7,16 +6,17 @@ void play_round(Board *board) {
     wrefresh(board->boardWin);
 }
 void process_input(WINDOW *boardWin) {
-    getch();
+    char input = wgetch(boardWin);
     // input processing
 }
 
 void update_state(Board *board) {
-    Graphic apple = {.icon = 'A'};
-    get_empty_locale(board, &apple.y, &apple.x);
-    add_char(board->boardWin, apple.y, apple.x, apple.icon);
+    if(board->apple != NULL) {
+        mvwaddch(board->boardWin, board->apple->y, board->apple->x, ' ');
+        free(board->apple);
+        board->apple = NULL;
+    }
+    construct_apple(board);
+    mvwaddch(board->boardWin, board->apple->y, board->apple->x, board->apple->icon);
+    wrefresh(board->boardWin);
 }
-
-//void redraw() clear_win
-
-//void update_state(WINDOW *boardWin);
