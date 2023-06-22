@@ -5,20 +5,22 @@
 #include <display.h>
 
 int main(void) {
-    // Initialize ncurses
+    // Init
     initscr();
     cbreak();
-
-    // Turn off character echoing
     noecho();
 
-    WINDOW *win = NULL;
-    set_win(&win);
+    // Init window
+    WINDOW *boardWin = NULL;
+    int height;
+    int width;
+    set_win(&boardWin, &height, &width);
+    clear_win(boardWin);
 
-    // Await user input;
+
+    //add_char(boardWin, height - 2, width - 2, '#');
+
     getch();
-
-
     // End ncurses
     endwin();
 
