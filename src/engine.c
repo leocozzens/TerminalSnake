@@ -1,21 +1,22 @@
 #include <engine.h>
 
-Board *init_window(void) {
-    Board *board = malloc(sizeof(Board));
-    board->apple = NULL;
-    board->snakeParts = NULL;
-    set_win(board);
-    clear_win(board->boardWin);
-    board->currentDirection = rand() % 4;
+void init_window(Board **board, _Bool initialized) {
+    if(!initialized) {
+        *board = malloc(sizeof(Board));
+        set_win(*board);
+    }
+    (*board)->apple = NULL;
+    (*board)->snakeParts = NULL;
+    clear_win((*board)->boardWin);
+    (*board)->running = 1;
+    (*board)->currentDirection = rand() % 4;
 
-    construct_snake(board);
-    print_snake(board);
-    wrefresh(board->boardWin);
+    construct_snake(*board);
+    print_snake(*board);
+    wrefresh((*board)->boardWin);
 
-    construct_apple(board);
-    mvwaddch(board->boardWin, board->apple->y, board->apple->x, APPLE);
-
-    return board;
+    construct_apple(*board);
+    mvwaddch((*board)->boardWin, (*board)->apple->y, (*board)->apple->x, APPLE);
 }
 
 void play_round(Board *board) {
@@ -64,9 +65,7 @@ void update_state(Board *board) {
                 }
                 break;
             default:
-                //end_game(board->boardWin);
-                endwin();
-                exit(0);
+                board->running = 0;
                 break;
         }
     }
@@ -85,6 +84,18 @@ void place_head(Board *board) {
 
 void trunc_tail(Board *board) {
     Graphic tailPiece;
-    deque(board->snakeParts, &tailPiece);
+    if(deque(board->snakeParts, &tailPiece)) {
+        endwin();
+        fprintf(stderr, "ERROR: Attempted to deque empty queue\n");
+        exit(1);
+    }
     mvwaddch(board->boardWin, tailPiece.y, tailPiece.x, ' ');
+}
+
+void end_round(Board *board) {
+    clear_win(board->boardWin);
+
+    Graphic tailPiece;
+    while(deque(board->snakeParts, &tailPiece));
+    free(board->apple);
 }

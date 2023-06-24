@@ -89,12 +89,9 @@ void add_piece(Queue *snakeParts, uint16_t y, uint16_t x) {
     snakeParts->head = newPiece;
 }
 
-void deque(Queue *snakeParts, Graphic *tailPiece) { // TODO: Make queue additions reuse of old snake pieces
-    if(snakeParts->head == NULL) {
-        endwin();
-        fprintf(stderr, "ERROR: Attempted to deque empty queue\n");
-        exit(1);
-    }
+_Bool deque(Queue *snakeParts, Graphic *tailPiece) { // TODO: Make queue additions reuse of old snake pieces
+    if(snakeParts->head == NULL) return 1;
+
     SnakePiece *tmp = snakeParts->tail;
     snakeParts->tail = tmp->nextPiece;
     if(snakeParts->tail == NULL) snakeParts->head = NULL;
@@ -103,6 +100,7 @@ void deque(Queue *snakeParts, Graphic *tailPiece) { // TODO: Make queue addition
     tailPiece->x = tmp->piece.x;
 
     free(tmp);
+    return 0;
 }
 
 void next_head(Queue *snakeParts, uint16_t *rows, uint16_t *columns, Direction currentDirection) {

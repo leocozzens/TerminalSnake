@@ -31,6 +31,7 @@ typedef struct {
 
 typedef struct {
     WINDOW *boardWin;
+    _Bool running;
     size_t height;
     size_t width;
     Direction currentDirection;

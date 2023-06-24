@@ -2,13 +2,17 @@
 #include <engine.h>
 
 int main(void) {
-    Board *board = init_window();
+    _Bool contGame = 1;
+    _Bool initialized = 0;
+    Board *board;
+    while(contGame) {
+        init_window(&board, initialized);
+        initialized = 1;
+        while(board->running) {
+            play_round(board);
+        }
 
-    _Bool running = 1;
-    while(running) {
-        play_round(board);
+        end_round(board);
     }
-
-    endwin();
     return 0;
 }
