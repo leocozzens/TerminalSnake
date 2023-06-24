@@ -6,11 +6,14 @@ Board *init_window(void) {
     board->snakeParts = NULL;
     set_win(board);
     clear_win(board->boardWin);
-    construct_apple(board);
-    mvwaddch(board->boardWin, board->apple->y, board->apple->x, APPLE);
+    board->currentDirection = rand() % 4;
 
     construct_snake(board);
     print_snake(board);
+    wrefresh(board->boardWin);
+
+    construct_apple(board);
+    mvwaddch(board->boardWin, board->apple->y, board->apple->x, APPLE);
 
     return board;
 }
@@ -43,13 +46,21 @@ void process_input(Board *board) {
 
 void update_state(Board *board) {
     place_head(board);
-    char next_char = mvwinch(board->boardWin, board->snakeParts->head->piece.y, board->snakeParts->head->piece.x);
-    if(next_char != ' ') {
-        switch(next_char) {
+    char nextChar = CHECK_TAIL(board);
+    if(nextChar != ' ') {
+        switch(nextChar) {
             case APPLE:
                 new_apple(board);
                 break;
+            case SNAKE_ICON:
+                trunc_tail(board);
+                if(CHECK_TAIL(board) == SNAKE_ICON) {
+                    endwin();
+                    exit(0);
+                }
+                break;
             default:
+                //end_game(board->boardWin);
                 endwin();
                 exit(0);
                 break;
@@ -61,9 +72,10 @@ void update_state(Board *board) {
 }
 
 void place_head(Board *board) {
-    Graphic *nextHead = next_head(board->snakeParts, board->currentDirection);
-    add_piece(board->snakeParts, nextHead->y, nextHead->x); // TODO: have add_piece take graphic and add it to new piece
-    free(nextHead);
+    int y;
+    int x;
+    next_head(board->snakeParts, &y, &x, board->currentDirection);
+    add_piece(board->snakeParts, y, x);
 }
 
 

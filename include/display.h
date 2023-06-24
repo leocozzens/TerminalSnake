@@ -10,7 +10,6 @@
 #include <stdlib.h>
 
 #define BOARD_SCALE 15
-#define MIN_HEIGHT 5
 #define SET_BORDER(window) box(window, 0, 0)
 
 // Local headers

@@ -5,6 +5,7 @@
 #include <constructors.h>
 #include <display.h>
 
+#define CHECK_TAIL(board) mvwinch(board->boardWin, board->snakeParts->head->piece.y, board->snakeParts->head->piece.x)
 
 Board *init_window(void);
 void play_round(Board *board);

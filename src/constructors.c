@@ -41,10 +41,31 @@ void construct_snake(Board *board) {
         exit(1);
     }
     init_queue(board->snakeParts);
-    add_piece(board->snakeParts, 10, 10);
-    add_piece(board->snakeParts, 9, 10);
-    add_piece(board->snakeParts, 8, 10);
-    add_piece(board->snakeParts, 7, 10);
+    int y;
+    int x;
+    get_empty_locale(board, &y, &x);
+    switch(board->currentDirection) {
+        case down:
+            y = rand() % (board->height - (START_LENGTH + 1)) + 1;
+            for(int i = 0; i < START_LENGTH; i++)
+                add_piece(board->snakeParts, y + i, x);
+            break;
+        case up:
+            y = rand() % (board->height - (START_LENGTH + 1)) + START_LENGTH;
+            for(int i = 0; i < START_LENGTH; i++)
+                add_piece(board->snakeParts, y - i, x);
+            break;
+        case left:
+            x = rand() % (board->width - (START_LENGTH + 1)) + START_LENGTH;
+            for(int i = 0; i < START_LENGTH; i++)
+                add_piece(board->snakeParts, y, x - i);
+            break;
+        case right:
+            x = rand() % (board->width - (START_LENGTH + 1)) + 1;
+            for(int i = 0; i < START_LENGTH; i++)
+                add_piece(board->snakeParts, y, x + i);
+            break;
+    }
 }
 
 void init_queue(Queue *init) {
@@ -68,7 +89,7 @@ void add_piece(Queue *snakeParts, int y, int x) {
     snakeParts->head = newPiece;
 }
 
-void deque(Queue *snakeParts, Graphic *tailPiece) {
+void deque(Queue *snakeParts, Graphic *tailPiece) { // TODO: Make queue additions reuse of old snake pieces
     if(snakeParts->head == NULL) {
         endwin();
         fprintf(stderr, "ERROR: Attempted to deque empty queue\n");
@@ -84,31 +105,21 @@ void deque(Queue *snakeParts, Graphic *tailPiece) {
     free(tmp);
 }
 
-Graphic *next_head(Queue *snakeParts, Direction currentDirection) {
-    Graphic *nextHead = malloc(sizeof(SnakePiece));
-    if(nextHead == NULL) {
-        endwin();
-        fprintf(stderr, "ERROR: Memory allocation error\n");
-        exit(1);
-    }
-    int rows = snakeParts->head->piece.y;
-    int columns = snakeParts->head->piece.x;
+void next_head(Queue *snakeParts, int *rows, int *columns, Direction currentDirection) {
+    *rows = snakeParts->head->piece.y;
+    *columns = snakeParts->head->piece.x;
     switch(currentDirection) {
         case down:
-            rows++;
+            (*rows)++;
             break;
         case up:
-            rows--;
+            (*rows)--;
             break;
         case left:
-            columns--;
+            (*columns)--;
             break;
         case right:
-            columns++;
+            (*columns)++;
             break;
     }
-
-    nextHead->y = rows;
-    nextHead->x = columns;
-    return nextHead;
 }

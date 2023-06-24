@@ -13,13 +13,13 @@ void set_win(Board *board) {
     int maxY, maxX;
     getmaxyx(stdscr, maxY, maxX);
 
-    board->height = BOARD_SCALE;
+    board->height = BOARD_SCALE; // TODO: Add scaling default, and custom size determined by switch
     board->width = board->height * 2.5;
 
     if(board->height > maxY || board->width > maxX) {
         board->height = maxY;
         board->width = board->height * 2.5;
-        if(board->width > maxX || maxY < MIN_HEIGHT) {
+        if(board->width > maxX || maxY < (START_LENGTH + 2)) { // Added 2 to allow for both borders
             endwin();
             fprintf(stderr, "ERROR: Terminal size too small");
             exit(1);

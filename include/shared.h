@@ -4,6 +4,8 @@
 #define APPLE 'A'
 #define SNAKE_ICON '#'
 
+#define START_LENGTH 4
+
 // Ncurses terminal graphics library
 #include <ncurses.h>
 
