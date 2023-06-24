@@ -45,6 +45,6 @@ void print_snake(Board *board) {
     }
 }
 
-void print_piece(WINDOW *boardWin, SnakePiece *printPart) {
-    mvwaddch(boardWin, printPart->piece.y, printPart->piece.x, SNAKE_ICON);
+void print_head(WINDOW *boardWin, Queue *snakeParts) {
+    mvwaddch(boardWin, snakeParts->head->piece.y, snakeParts->head->piece.x, SNAKE_ICON);
 }

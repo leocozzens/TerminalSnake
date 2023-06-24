@@ -14,6 +14,6 @@ void construct_snake(Board *board);
 void init_queue(Queue *init);
 void add_piece(Queue *snakeParts, int y, int x);
 void deque(Queue *snakeParts, Graphic *tailPiece);
-SnakePiece *next_head(Queue *snakeParts, Direction currentDirection);
+Graphic *next_head(Queue *snakeParts, Direction currentDirection);
 
 #endif

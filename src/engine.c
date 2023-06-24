@@ -16,24 +16,59 @@ Board *init_window(void) {
 }
 
 void play_round(Board *board) {
-    process_input(board->boardWin);
+    process_input(board);
     update_state(board);
     wrefresh(board->boardWin);
 }
-void process_input(WINDOW *boardWin) {
-    char input = wgetch(boardWin);
-    // input processing
+
+void process_input(Board *board) {
+    char input = wgetch(board->boardWin);
+    switch(input) {
+        case 's':
+            board->currentDirection = down;
+            break;
+        case 'w':
+            board->currentDirection = up;
+            break;
+        case 'a':
+            board->currentDirection = left;
+            break;
+        case 'd':
+            board->currentDirection = right;
+            break;
+        default:
+            break;
+    }
 }
 
 void update_state(Board *board) {
-    SnakePiece *nextHead = next_head(board->snakeParts, board->currentDirection);
-    add_piece(board->snakeParts, nextHead->piece.y, nextHead->piece.x);
-    print_piece(board->boardWin, nextHead);
-    free(nextHead);
-    nextHead = NULL;
+    place_head(board);
+    char next_char = mvwinch(board->boardWin, board->snakeParts->head->piece.y, board->snakeParts->head->piece.x);
+    if(next_char != ' ') {
+        switch(next_char) {
+            case APPLE:
+                new_apple(board);
+                break;
+            default:
+                endwin();
+                exit(0);
+                break;
+        }
+    }
+    else trunc_tail(board);
 
+    print_head(board->boardWin, board->snakeParts);
+}
+
+void place_head(Board *board) {
+    Graphic *nextHead = next_head(board->snakeParts, board->currentDirection);
+    add_piece(board->snakeParts, nextHead->y, nextHead->x); // TODO: have add_piece take graphic and add it to new piece
+    free(nextHead);
+}
+
+
+void trunc_tail(Board *board) {
     Graphic tailPiece;
     deque(board->snakeParts, &tailPiece);
     mvwaddch(board->boardWin, tailPiece.y, tailPiece.x, ' ');
-    new_apple(board);
 }

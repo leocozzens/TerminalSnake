@@ -84,8 +84,8 @@ void deque(Queue *snakeParts, Graphic *tailPiece) {
     free(tmp);
 }
 
-SnakePiece *next_head(Queue *snakeParts, Direction currentDirection) {
-    SnakePiece *nextHead = malloc(sizeof(SnakePiece));
+Graphic *next_head(Queue *snakeParts, Direction currentDirection) {
+    Graphic *nextHead = malloc(sizeof(SnakePiece));
     if(nextHead == NULL) {
         endwin();
         fprintf(stderr, "ERROR: Memory allocation error\n");
@@ -108,7 +108,7 @@ SnakePiece *next_head(Queue *snakeParts, Direction currentDirection) {
             break;
     }
 
-    nextHead->piece.y = rows;
-    nextHead->piece.x = columns;
+    nextHead->y = rows;
+    nextHead->x = columns;
     return nextHead;
 }

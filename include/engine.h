@@ -8,7 +8,9 @@
 
 Board *init_window(void);
 void play_round(Board *board);
-void process_input(WINDOW *boardWin);
+void process_input(Board *board);
 void update_state(Board *board);
+void place_head(Board *board);
+void trunc_tail(Board *board);
 
 #endif

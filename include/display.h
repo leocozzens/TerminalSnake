@@ -19,6 +19,6 @@
 void set_win(Board *board);
 void clear_win(WINDOW *boardWin);
 void print_snake(Board *board);
-void print_piece(WINDOW *boardWin, SnakePiece *printPart);
+void print_head(WINDOW *boardWin, Queue *snakeParts);
 
 #endif
