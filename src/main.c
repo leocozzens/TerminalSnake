@@ -6,8 +6,7 @@ int main(void) {
     _Bool initialized = 0;
     Board *board;
     while(contGame) {
-        init_window(&board, initialized);
-        initialized = 1;
+        init_window(&board, &initialized);
         while(board->running) {
             play_round(board);
         }

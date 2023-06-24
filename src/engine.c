@@ -1,7 +1,7 @@
 #include <engine.h>
 
-void init_window(Board **board, _Bool initialized) {
-    if(!initialized) {
+void init_window(Board **board, _Bool *initialized) {
+    if(!(*initialized)) {
         *board = malloc(sizeof(Board));
         set_win(*board);
     }
@@ -17,6 +17,8 @@ void init_window(Board **board, _Bool initialized) {
 
     construct_apple(*board);
     mvwaddch((*board)->boardWin, (*board)->apple->y, (*board)->apple->x, APPLE);
+
+    *initialized = 1;
 }
 
 void play_round(Board *board) {
@@ -60,8 +62,7 @@ void update_state(Board *board) {
             case SNAKE_ICON:
                 trunc_tail(board);
                 if(CHECK_TAIL(board) == SNAKE_ICON) {
-                    endwin();
-                    exit(0);
+                    board->running = 0;
                 }
                 break;
             default:
