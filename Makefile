@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Iinclude
+CFLAGS = -Iinclude -g
 SRC = src
 OBJ = obj
 BINDIR = bin
@@ -7,12 +7,12 @@ SRCS = $(wildcard $(SRC)/*.c)
 OBJS = $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SRCS))
 BIN = $(BINDIR)/main.out
 
-SUBMITNAME = tSnake.zip
+SUBMITNAME = terminalSnake.zip
 zip = zip
 
 all: $(BIN)
 
-release: CFLAGS = -O2
+release: CFLAGS = -Iinclude -O2
 release: new
 
 $(BIN): $(OBJS)

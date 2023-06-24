@@ -1,5 +1,17 @@
 #include <engine.h>
 
+Board *init_window(void) {
+    Board *board = malloc(sizeof(Board));
+    board->apple = NULL;
+    board->snakeParts = NULL;
+    set_win(board);
+    clear_win(board->boardWin);
+    construct_apple(board);
+    mvwaddch(board->boardWin, board->apple->y, board->apple->x, APPLE);
+
+    return board;
+}
+
 void play_round(Board *board) {
     process_input(board->boardWin);
     update_state(board);
@@ -11,12 +23,5 @@ void process_input(WINDOW *boardWin) {
 }
 
 void update_state(Board *board) {
-    if(board->apple != NULL) {
-        mvwaddch(board->boardWin, board->apple->y, board->apple->x, ' ');
-        free(board->apple);
-        board->apple = NULL;
-    }
-    construct_apple(board);
-    mvwaddch(board->boardWin, board->apple->y, board->apple->x, board->apple->icon);
-    wrefresh(board->boardWin);
+    new_apple(board);
 }

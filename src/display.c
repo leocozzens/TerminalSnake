@@ -5,6 +5,7 @@ void set_win(Board *board) {
     initscr();
     cbreak();
     noecho();
+    curs_set(0);
     
     // Seed rand
     srand(time(NULL));
@@ -33,13 +34,7 @@ void set_win(Board *board) {
 void clear_win(WINDOW *boardWin) {
     wclear(boardWin);
     SET_BORDER(boardWin);
-    curs_set(0);
     wrefresh(boardWin);
 }
 
-void get_empty_locale(Board *board, int *y, int *x) {
-    do {
-        *y = rand() % board->height;
-        *x = rand() % board->width;
-    } while(mvwinch(board->boardWin, *y, *x) != ' ');
-}
+//void print_graphic
