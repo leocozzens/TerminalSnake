@@ -9,11 +9,14 @@
 // Ncurses terminal graphics library
 #include <ncurses.h>
 
+// Standard C libraries
+#include <stdint.h>
+
 typedef enum { up, down, left, right } Direction;
 
 typedef struct {
-    int y;
-    int x;
+    uint16_t y;
+    uint16_t x;
 } Graphic;
 
 typedef struct SnakePiece {
@@ -28,8 +31,8 @@ typedef struct {
 
 typedef struct {
     WINDOW *boardWin;
-    int height;
-    int width;
+    size_t height;
+    size_t width;
     Direction currentDirection;
     Graphic *apple;
     Queue *snakeParts;

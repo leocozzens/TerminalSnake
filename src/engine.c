@@ -25,17 +25,21 @@ void play_round(Board *board) {
 }
 
 void process_input(Board *board) {
-    char input = wgetch(board->boardWin);
+    int16_t input = wgetch(board->boardWin);
     switch(input) {
-        case 's':
-            board->currentDirection = down;
-            break;
+        case KEY_UP:
         case 'w':
             board->currentDirection = up;
             break;
+        case KEY_DOWN:
+        case 's':
+            board->currentDirection = down;
+            break;
+        case KEY_LEFT:
         case 'a':
             board->currentDirection = left;
             break;
+        case KEY_RIGHT:
         case 'd':
             board->currentDirection = right;
             break;
@@ -72,8 +76,8 @@ void update_state(Board *board) {
 }
 
 void place_head(Board *board) {
-    int y;
-    int x;
+    uint16_t y;
+    uint16_t x;
     next_head(board->snakeParts, &y, &x, board->currentDirection);
     add_piece(board->snakeParts, y, x);
 }

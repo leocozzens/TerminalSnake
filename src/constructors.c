@@ -15,7 +15,7 @@ void construct_apple(Board *board) {
     get_empty_locale(board, &(board->apple->y), &(board->apple->x));
 }
 
-void get_empty_locale(Board *board, int *y, int *x) {
+void get_empty_locale(Board *board, uint16_t *y, uint16_t *x) {
     do {
         *y = rand() % board->height;
         *x = rand() % board->width;
@@ -41,28 +41,28 @@ void construct_snake(Board *board) {
         exit(1);
     }
     init_queue(board->snakeParts);
-    int y;
-    int x;
+    uint16_t y;
+    uint16_t x;
     get_empty_locale(board, &y, &x);
     switch(board->currentDirection) {
-        case down:
-            y = rand() % (board->height - (START_LENGTH + 1)) + 1;
-            for(int i = 0; i < START_LENGTH; i++)
-                add_piece(board->snakeParts, y + i, x);
-            break;
         case up:
             y = rand() % (board->height - (START_LENGTH + 1)) + START_LENGTH;
-            for(int i = 0; i < START_LENGTH; i++)
+            for(uint16_t i = 0; i < START_LENGTH; i++)
                 add_piece(board->snakeParts, y - i, x);
+            break;
+        case down:
+            y = rand() % (board->height - (START_LENGTH + 1)) + 1;
+            for(uint16_t i = 0; i < START_LENGTH; i++)
+                add_piece(board->snakeParts, y + i, x);
             break;
         case left:
             x = rand() % (board->width - (START_LENGTH + 1)) + START_LENGTH;
-            for(int i = 0; i < START_LENGTH; i++)
+            for(uint16_t i = 0; i < START_LENGTH; i++)
                 add_piece(board->snakeParts, y, x - i);
             break;
         case right:
             x = rand() % (board->width - (START_LENGTH + 1)) + 1;
-            for(int i = 0; i < START_LENGTH; i++)
+            for(uint16_t i = 0; i < START_LENGTH; i++)
                 add_piece(board->snakeParts, y, x + i);
             break;
     }
@@ -73,7 +73,7 @@ void init_queue(Queue *init) {
     init->head = NULL;
 }
 
-void add_piece(Queue *snakeParts, int y, int x) {
+void add_piece(Queue *snakeParts, uint16_t y, uint16_t x) {
     SnakePiece *newPiece = malloc(sizeof(SnakePiece));
     if(newPiece == NULL) {
         endwin();
@@ -105,7 +105,7 @@ void deque(Queue *snakeParts, Graphic *tailPiece) { // TODO: Make queue addition
     free(tmp);
 }
 
-void next_head(Queue *snakeParts, int *rows, int *columns, Direction currentDirection) {
+void next_head(Queue *snakeParts, uint16_t *rows, uint16_t *columns, Direction currentDirection) {
     *rows = snakeParts->head->piece.y;
     *columns = snakeParts->head->piece.x;
     switch(currentDirection) {

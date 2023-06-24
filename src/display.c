@@ -10,7 +10,7 @@ void set_win(Board *board) {
     // Seed rand
     srand(time(NULL));
 
-    int maxY, maxX;
+    size_t maxY, maxX;
     getmaxyx(stdscr, maxY, maxX);
 
     board->height = BOARD_SCALE; // TODO: Add scaling default, and custom size determined by switch
@@ -28,6 +28,7 @@ void set_win(Board *board) {
 
     board->boardWin = newwin(board->height, board->width, (maxY/2) - (board->height/2), (maxX/2) - (board->width/2));
 
+    keypad(board->boardWin, 1);
     refresh();
 }
 
