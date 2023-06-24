@@ -28,6 +28,7 @@ typedef struct {
     WINDOW *boardWin;
     int height;
     int width;
+    Direction currentDirection;
     Graphic *apple;
     Queue *snakeParts;
 } Board;

@@ -37,4 +37,14 @@ void clear_win(WINDOW *boardWin) {
     wrefresh(boardWin);
 }
 
-//void print_graphic
+void print_snake(Board *board) {
+    SnakePiece *tmp = board->snakeParts->tail;
+    while(tmp != NULL) {
+        mvwaddch(board->boardWin, tmp->piece.y, tmp->piece.x, SNAKE_ICON);
+        tmp = tmp->nextPiece;
+    }
+}
+
+void print_piece(WINDOW *boardWin, SnakePiece *printPart) {
+    mvwaddch(boardWin, printPart->piece.y, printPart->piece.x, SNAKE_ICON);
+}

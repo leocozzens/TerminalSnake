@@ -13,6 +13,7 @@ void new_apple(Board *board);
 void construct_snake(Board *board);
 void init_queue(Queue *init);
 void add_piece(Queue *snakeParts, int y, int x);
-void deque(Queue *snakeParts, int *y, int *x);
+void deque(Queue *snakeParts, Graphic *tailPiece);
+SnakePiece *next_head(Queue *snakeParts, Direction currentDirection);
 
 #endif

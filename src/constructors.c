@@ -1,6 +1,11 @@
 #include <constructors.h>
 
 void construct_apple(Board *board) {
+    if(board == NULL) {
+        endwin();
+        fprintf(stderr, "ERROR: Empty board structure\n");
+        exit(1);
+    }
     board->apple = malloc(sizeof(Graphic));
     if(board->apple == NULL) {
         endwin();
@@ -37,6 +42,9 @@ void construct_snake(Board *board) {
     }
     init_queue(board->snakeParts);
     add_piece(board->snakeParts, 10, 10);
+    add_piece(board->snakeParts, 9, 10);
+    add_piece(board->snakeParts, 8, 10);
+    add_piece(board->snakeParts, 7, 10);
 }
 
 void init_queue(Queue *init) {
@@ -60,7 +68,7 @@ void add_piece(Queue *snakeParts, int y, int x) {
     snakeParts->head = newPiece;
 }
 
-void deque(Queue *snakeParts, int *y, int *x) {
+void deque(Queue *snakeParts, Graphic *tailPiece) {
     if(snakeParts->head == NULL) {
         endwin();
         fprintf(stderr, "ERROR: Attempted to deque empty queue\n");
@@ -70,8 +78,37 @@ void deque(Queue *snakeParts, int *y, int *x) {
     snakeParts->tail = tmp->nextPiece;
     if(snakeParts->tail == NULL) snakeParts->head = NULL;
 
-    *y = tmp->piece.y;
-    *x = tmp->piece.x;
+    tailPiece->y = tmp->piece.y;
+    tailPiece->x = tmp->piece.x;
 
     free(tmp);
+}
+
+SnakePiece *next_head(Queue *snakeParts, Direction currentDirection) {
+    SnakePiece *nextHead = malloc(sizeof(SnakePiece));
+    if(nextHead == NULL) {
+        endwin();
+        fprintf(stderr, "ERROR: Memory allocation error\n");
+        exit(1);
+    }
+    int rows = snakeParts->head->piece.y;
+    int columns = snakeParts->head->piece.x;
+    switch(currentDirection) {
+        case down:
+            rows++;
+            break;
+        case up:
+            rows--;
+            break;
+        case left:
+            columns--;
+            break;
+        case right:
+            columns++;
+            break;
+    }
+
+    nextHead->piece.y = rows;
+    nextHead->piece.x = columns;
+    return nextHead;
 }

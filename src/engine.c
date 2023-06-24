@@ -9,6 +9,9 @@ Board *init_window(void) {
     construct_apple(board);
     mvwaddch(board->boardWin, board->apple->y, board->apple->x, APPLE);
 
+    construct_snake(board);
+    print_snake(board);
+
     return board;
 }
 
@@ -23,5 +26,14 @@ void process_input(WINDOW *boardWin) {
 }
 
 void update_state(Board *board) {
+    SnakePiece *nextHead = next_head(board->snakeParts, board->currentDirection);
+    add_piece(board->snakeParts, nextHead->piece.y, nextHead->piece.x);
+    print_piece(board->boardWin, nextHead);
+    free(nextHead);
+    nextHead = NULL;
+
+    Graphic tailPiece;
+    deque(board->snakeParts, &tailPiece);
+    mvwaddch(board->boardWin, tailPiece.y, tailPiece.x, ' ');
     new_apple(board);
 }
