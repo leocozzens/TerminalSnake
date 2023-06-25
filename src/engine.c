@@ -10,14 +10,13 @@ void init_window(Board **board, _Bool *initialized) {
     clear_win((*board)->boardWin);
     (*board)->running = 1;
     (*board)->currentDirection = rand() % 4;
+    (*board)->score = 0;
 
     construct_snake(*board);
     print_snake(*board);
     wrefresh((*board)->boardWin);
 
-    construct_apple(*board);
-    mvwaddch((*board)->boardWin, (*board)->apple->y, (*board)->apple->x, APPLE);
-
+    new_apple(*board);
     *initialized = 1;
 }
 
@@ -58,12 +57,12 @@ void update_state(Board *board) {
         switch(nextChar) {
             case APPLE:
                 new_apple(board);
+                board->score += 10;
                 break;
             case SNAKE_ICON:
                 trunc_tail(board);
-                if(CHECK_TAIL(board) == SNAKE_ICON) {
+                if(CHECK_TAIL(board) == SNAKE_ICON) 
                     board->running = 0;
-                }
                 break;
             default:
                 board->running = 0;
@@ -99,4 +98,9 @@ void end_round(Board *board) {
     Graphic tailPiece;
     while(deque(board->snakeParts, &tailPiece));
     free(board->apple);
+}
+
+void end_prompt(Board *board) {
+    printw("%lu ", board->score);
+    getch();
 }

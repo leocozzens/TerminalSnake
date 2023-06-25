@@ -13,7 +13,7 @@ void set_win(Board *board) {
     size_t maxY, maxX;
     getmaxyx(stdscr, maxY, maxX);
 
-    board->height = BOARD_SCALE; // TODO: Add scaling default, and custom size determined by switch
+    board->height = BOARD_SCALE; // TODO: Add scaling default, and custom size determined by switch, ensure overflow protection
     board->width = board->height * 2.5;
 
     if(board->height > maxY || board->width > maxX) {

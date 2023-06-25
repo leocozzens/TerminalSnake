@@ -14,5 +14,6 @@ void update_state(Board *board);
 void place_head(Board *board);
 void trunc_tail(Board *board);
 void end_round(Board *board);
+void end_prompt(Board *board);
 
 #endif

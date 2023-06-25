@@ -28,6 +28,7 @@ void new_apple(Board *board) {
         free(board->apple);
         board->apple = NULL;
     }
+    wrefresh(board->boardWin);
     construct_apple(board);
     mvwaddch(board->boardWin, board->apple->y, board->apple->x, APPLE);
     wrefresh(board->boardWin);

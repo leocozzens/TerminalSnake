@@ -31,9 +31,11 @@ typedef struct {
 
 typedef struct {
     WINDOW *boardWin;
+    WINDOW scoreBoard;
+    uint64_t score;
     _Bool running;
-    size_t height;
-    size_t width;
+    uint16_t height;
+    uint16_t width;
     Direction currentDirection;
     Graphic *apple;
     Queue *snakeParts;

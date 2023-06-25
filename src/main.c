@@ -10,8 +10,9 @@ int main(void) {
         while(board->running) {
             play_round(board);
         }
-
         end_round(board);
+
+        end_prompt(board);
     }
     return 0;
 }
