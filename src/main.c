@@ -1,7 +1,13 @@
+// C standard libraries
+#include <time.h>
+
 // Local headers
 #include <engine.h>
 
-int main(void) {
+int main(void) { // TODO: add switches that customize board and snake elements
+    // Seed rand
+    srand(time(NULL));
+
     _Bool contGame = 1;
     _Bool initialized = 0;
     Board *board;

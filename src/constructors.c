@@ -1,10 +1,14 @@
 #include <constructors.h>
 
-void construct_apple(Board *board) {
+void construct_apple(Board *board, uint16_t emptyY, uint16_t emptyX) {
     if(board == NULL) {
         endwin();
         fprintf(stderr, "ERROR: Empty board structure\n");
         exit(1);
+    }
+    if(board->apple != NULL) {
+        free(board->apple);
+        board->apple = NULL;
     }
     board->apple = malloc(sizeof(Graphic));
     if(board->apple == NULL) {
@@ -12,29 +16,11 @@ void construct_apple(Board *board) {
         fprintf(stderr, "ERROR: Memory allocation error\n");
         exit(1);
     }
-    get_empty_locale(board, &(board->apple->y), &(board->apple->x));
+    board->apple->y = emptyY;
+    board->apple->x = emptyX;
 }
 
-void get_empty_locale(Board *board, uint16_t *y, uint16_t *x) {
-    do {
-        *y = rand() % board->height;
-        *x = rand() % board->width;
-    } while(mvwinch(board->boardWin, *y, *x) != ' ');
-}
-
-void new_apple(Board *board) {
-    if(board->apple != NULL) {
-        mvwaddch(board->boardWin, board->apple->y, board->apple->x, ' ');
-        free(board->apple);
-        board->apple = NULL;
-    }
-    wrefresh(board->boardWin);
-    construct_apple(board);
-    mvwaddch(board->boardWin, board->apple->y, board->apple->x, APPLE);
-    wrefresh(board->boardWin);
-}
-
-void construct_snake(Board *board) {
+void construct_snake(Board *board, uint16_t emptyY, uint16_t emptyX) {
     board->snakeParts = malloc(sizeof(Queue));
     if (board->snakeParts == NULL) {
         endwin();
@@ -42,29 +28,26 @@ void construct_snake(Board *board) {
         exit(1);
     }
     init_queue(board->snakeParts);
-    uint16_t y;
-    uint16_t x;
-    get_empty_locale(board, &y, &x);
     switch(board->currentDirection) {
         case up:
-            y = rand() % (board->height - (START_LENGTH + 1)) + START_LENGTH;
+            emptyY = rand() % (board->height - (START_LENGTH + 1)) + START_LENGTH;
             for(uint16_t i = 0; i < START_LENGTH; i++)
-                add_piece(board->snakeParts, y - i, x);
+                add_piece(board->snakeParts, emptyY - i, emptyX);
             break;
         case down:
-            y = rand() % (board->height - (START_LENGTH + 1)) + 1;
+            emptyY = rand() % (board->height - (START_LENGTH + 1)) + 1;
             for(uint16_t i = 0; i < START_LENGTH; i++)
-                add_piece(board->snakeParts, y + i, x);
+                add_piece(board->snakeParts, emptyY + i, emptyX);
             break;
         case left:
-            x = rand() % (board->width - (START_LENGTH + 1)) + START_LENGTH;
+            emptyX = rand() % (board->width - (START_LENGTH + 1)) + START_LENGTH;
             for(uint16_t i = 0; i < START_LENGTH; i++)
-                add_piece(board->snakeParts, y, x - i);
+                add_piece(board->snakeParts, emptyY, emptyX - i);
             break;
         case right:
-            x = rand() % (board->width - (START_LENGTH + 1)) + 1;
+            emptyX = rand() % (board->width - (START_LENGTH + 1)) + 1;
             for(uint16_t i = 0; i < START_LENGTH; i++)
-                add_piece(board->snakeParts, y, x + i);
+                add_piece(board->snakeParts, emptyY, emptyX + i);
             break;
     }
 }
@@ -108,11 +91,11 @@ void next_head(Queue *snakeParts, uint16_t *rows, uint16_t *columns, Direction c
     *rows = snakeParts->head->piece.y;
     *columns = snakeParts->head->piece.x;
     switch(currentDirection) {
-        case down:
-            (*rows)++;
-            break;
         case up:
             (*rows)--;
+            break;
+        case down:
+            (*rows)++;
             break;
         case left:
             (*columns)--;

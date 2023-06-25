@@ -6,9 +6,6 @@ void set_win(Board *board) {
     cbreak();
     noecho();
     curs_set(0);
-    
-    // Seed rand
-    srand(time(NULL));
 
     size_t maxY, maxX;
     getmaxyx(stdscr, maxY, maxX);
@@ -36,6 +33,13 @@ void clear_win(WINDOW *boardWin) {
     wclear(boardWin);
     SET_BORDER(boardWin);
     wrefresh(boardWin);
+}
+
+void get_empty_locale(Board *board, uint16_t *y, uint16_t *x) { // TODO: Add counter to check if board is full
+    do {
+        *y = rand() % (board->height - 1);
+        *x = rand() % (board->width - 1);
+    } while(mvwinch(board->boardWin, *y, *x) != ' ');
 }
 
 void print_snake(Board *board) {

@@ -1,9 +1,9 @@
 #ifndef SHARED_H
 #define SHARED_H
 
+// Constants
 #define APPLE 'A'
 #define SNAKE_ICON '#'
-
 #define START_LENGTH 4
 
 // Ncurses terminal graphics library
@@ -12,7 +12,7 @@
 // Standard C libraries
 #include <stdint.h>
 
-typedef enum { up, down, left, right } Direction;
+typedef enum { up = -1, down = 1, left = -2, right = 2 } Direction;
 
 typedef struct {
     uint16_t y;

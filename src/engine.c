@@ -9,14 +9,18 @@ void init_window(Board **board, _Bool *initialized) {
     (*board)->snakeParts = NULL;
     clear_win((*board)->boardWin);
     (*board)->running = 1;
-    (*board)->currentDirection = rand() % 4;
+    while(((*board)->currentDirection = rand() % 5 - 2) == 0); // Generates -1, 1, 2, or -2
     (*board)->score = 0;
 
-    construct_snake(*board);
+    uint16_t emptyY, emptyX;
+    get_empty_locale(*board, &emptyY, &emptyX); // Snake must be placed first as there is no locality checking for subsequant tail pieces
+    construct_snake(*board, emptyY, emptyX);
     print_snake(*board);
     wrefresh((*board)->boardWin);
 
-    new_apple(*board);
+    get_empty_locale(*board, &emptyY, &emptyX);
+    construct_apple(*board, emptyY, emptyX);
+    PLACE_APPLE(*board, APPLE);
     *initialized = 1;
 }
 
@@ -27,27 +31,37 @@ void play_round(Board *board) {
 }
 
 void process_input(Board *board) {
+    UNPAUSE:
     int16_t input = wgetch(board->boardWin);
     switch(input) {
         case KEY_UP:
         case 'w':
-            board->currentDirection = up;
+            set_direction(&board->currentDirection, up);
             break;
         case KEY_DOWN:
         case 's':
-            board->currentDirection = down;
+            set_direction(&board->currentDirection, down);
             break;
         case KEY_LEFT:
         case 'a':
-            board->currentDirection = left;
+            set_direction(&board->currentDirection, left);
             break;
         case KEY_RIGHT:
         case 'd':
-            board->currentDirection = right;
+            set_direction(&board->currentDirection, right);
+            break;
+        case 'p':
+            //wtimeout(board->boardWin, -1); // -1 Specifies blocking timeout
+            while(wgetch(board->boardWin) != 'p');
+            goto UNPAUSE;
             break;
         default:
             break;
     }
+}
+
+void set_direction(Direction *lastDirection, Direction newDirection) {
+    if(*lastDirection + newDirection != 0) *lastDirection = newDirection;
 }
 
 void update_state(Board *board) {
@@ -56,7 +70,11 @@ void update_state(Board *board) {
     if(nextChar != ' ') {
         switch(nextChar) {
             case APPLE:
-                new_apple(board);
+                uint16_t emptyY, emptyX;
+
+                get_empty_locale(board, &emptyY, &emptyX);
+                construct_apple(board, emptyY, emptyX);
+                PLACE_APPLE(board, APPLE);
                 board->score += 10;
                 break;
             case SNAKE_ICON:

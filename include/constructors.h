@@ -7,10 +7,8 @@
 // Local headers
 #include <shared.h>
 
-void construct_apple(Board *board);
-void get_empty_locale(Board *board, uint16_t *y, uint16_t *x);
-void new_apple(Board *board);
-void construct_snake(Board *board);
+void construct_apple(Board *board, uint16_t emptyY, uint16_t emptyX);
+void construct_snake(Board *board, uint16_t emptyY, uint16_t emptyX);
 void init_queue(Queue *init);
 void add_piece(Queue *snakeParts, uint16_t y, uint16_t x);
 _Bool deque(Queue *snakeParts, Graphic *tailPiece);
