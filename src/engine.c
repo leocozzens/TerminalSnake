@@ -71,9 +71,12 @@ void update_state(Board *board) {
         switch(nextChar) {
             case APPLE:
                 uint16_t emptyY, emptyX;
+                do { // Ensure that the new apple position is not the same as the next snake head position that hasnt yet been printed
+                    get_empty_locale(board, &emptyY, &emptyX);// TODO: Add counter to check if board is full
+                } while((emptyY == board->snakeParts->head->piece.y) || (emptyX == board->snakeParts->head->piece.x));
 
-                get_empty_locale(board, &emptyY, &emptyX);
                 construct_apple(board, emptyY, emptyX);
+                wrefresh(board->boardWin);
                 PLACE_APPLE(board, APPLE);
                 board->score += 10;
                 break;

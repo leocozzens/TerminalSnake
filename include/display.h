@@ -13,7 +13,7 @@
 #define BOARD_SCALE 15
 
 // Function-esque macros
-#define SET_BORDER(window) box((window), 0, 0)
+#define SET_BORDER(_window) box((_window), 0, 0)
 #define CHECK_TAIL(_board) mvwinch((_board)->boardWin, (_board)->snakeParts->head->piece.y, (_board)->snakeParts->head->piece.x)
 #define PLACE_APPLE(_board, _character) mvwaddch((_board)->boardWin, (_board)->apple->y, (_board)->apple->x, _character); \
 wrefresh((_board)->boardWin)
