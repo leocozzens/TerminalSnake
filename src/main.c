@@ -1,6 +1,3 @@
-// C standard libraries
-#include <time.h>
-
 // Local headers
 #include <engine.h>
 
@@ -12,13 +9,11 @@ int main(void) { // TODO: add switches that customize board and snake elements
     _Bool initialized = 0;
     Board *board;
     while(contGame) {
-        init_window(&board, &initialized);
+        init_window(&board, &initialized); // TODO: Add resize conditions for board window
         while(board->running) {
             play_round(board);
         }
         end_round(board);
-
-        end_prompt(board);
     }
     return 0;
 }

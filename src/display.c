@@ -50,6 +50,7 @@ void print_snake(Board *board) {
     }
 }
 
-void print_head(WINDOW *boardWin, Queue *snakeParts) {
-    mvwaddch(boardWin, snakeParts->head->piece.y, snakeParts->head->piece.x, SNAKE_ICON);
+void end_prompt(Board *board) {
+    printw("%lu ", board->score);
+    getch();
 }
