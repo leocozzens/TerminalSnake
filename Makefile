@@ -10,6 +10,7 @@ BIN = $(BINDIR)/main.out
 SUBMITNAME = terminalSnake.zip
 zip = zip
 
+all: create_dirs
 all: $(BIN)
 
 release: CFLAGS = -Iinclude -O2
@@ -29,6 +30,9 @@ link: $(OBJS)
 
 clean:
 	rm $(BINDIR)/* $(OBJ)/*
+
+create_dirs:
+	@mkdir -p bin obj
 
 new: clean
 new: all
