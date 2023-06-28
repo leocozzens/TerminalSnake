@@ -10,6 +10,7 @@
 // C standard libraries
 #include <stdlib.h>
 #include <string.h>
+#include <inttypes.h>
 
 // Constants
 #define BOARD_SCALE 15

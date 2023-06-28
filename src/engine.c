@@ -58,7 +58,7 @@ void process_input(Board *board) {
                 break;
             case 'p':
                 wtimeout(board->boardWin, -1);
-                while(wgetch(board->boardWin) != 'p');
+                while(wgetch(board->boardWin) != 'p'); // TODO: 3... 2... 1... Pause on first frame
                 wtimeout(board->boardWin, TURN_DURATION);
                 continue;
                 break;
@@ -69,7 +69,7 @@ void process_input(Board *board) {
     board->currentDirection = tempDirection;
 }
 
-double get_elapsed_time( void) {
+double get_elapsed_time( void) { // TODO: Add portable windows method
     struct timeval start;
     gettimeofday(&start, NULL);
     return (start.tv_sec * 1000.0) + (start.tv_usec / 1000.0);

@@ -68,7 +68,7 @@ void print_snake(Board *board) {
 void update_score(Board *board) {
     char scoreStr[board->width];
 
-    snprintf(scoreStr, board->width, "%d", board->score); // TODO: Add statement to check if score has filled bar
+    snprintf(scoreStr, board->width, "%" PRIu64, board->score); // TODO: Add statement to check if score has filled bar
     mvwprintw(board->scoreBoard, SCOREBOARD_HEIGHT/2, board->width - strlen(scoreStr) - 1, scoreStr);
     wrefresh(board->scoreBoard);
 }
