@@ -1,7 +1,16 @@
+// C standard libraries
+#include <string.h>
+
 // Local headers
 #include <engine.h>
 
-int main(void) { // TODO: add switches that customize board and snake elements
+int main(int argc, char **argv) { // TODO: add switches that customize board and snake elements
+    if(argc > 1) {
+        if(strlen(argv[1]) > 1) if(argv[1][1] == 'h') {
+            printf("TerminalSnake [OPTIONS]...\n");
+            exit(0);
+        }
+    }
     // Seed rand
     srand(time(NULL));
 

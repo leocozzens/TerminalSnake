@@ -14,16 +14,24 @@ void set_win(Board *board) {
     board->width = board->height * 2.5;
 
     if(board->height > maxY || board->width > maxX) {
-        board->height = maxY;
+        board->height = maxY - SCOREBOARD_HEIGHT;
         board->width = board->height * 2.5;
-        if(board->width > maxX || maxY < (START_LENGTH + 2)) { // Added 2 to allow for both borders
+        if(board->width > maxX || maxY < (START_LENGTH + 2 + SCOREBOARD_HEIGHT)) { // Added 4 to allow for both borders and one block of space
             endwin();
             fprintf(stderr, "ERROR: Terminal size too small");
             exit(1);
         }
     }
 
-    board->boardWin = newwin(board->height, board->width, (maxY/2) - (board->height/2), (maxX/2) - (board->width/2));
+    int middleX = (maxX - board->width) / 2;
+    board->boardWin = newwin(board->height, board->width, (maxY - board->height - SCOREBOARD_HEIGHT)/2, middleX); //TODO: position from bottom if terminal size triggered resize has occured
+
+    int scoreBoardY, scoreBoardX;
+    getbegyx(board->boardWin, scoreBoardY, scoreBoardX);
+
+    scoreBoardY = scoreBoardY + board->height - SCOREBOARD_HEIGHT/2;
+
+    board->scoreBoard = newwin(SCOREBOARD_HEIGHT, board->width, scoreBoardY, middleX);
 
     keypad(board->boardWin, 1);
     refresh();
@@ -33,6 +41,13 @@ void clear_win(WINDOW *boardWin) {
     wclear(boardWin);
     SET_BORDER(boardWin);
     wrefresh(boardWin);
+}
+
+void clear_score(WINDOW *scoreBoard) {
+    wclear(scoreBoard);
+    SET_BORDER_ROOFLESS(scoreBoard, 0);
+    mvwprintw(scoreBoard, 1, SCOREBOARD_HEIGHT/2, "SCORE:");
+    wrefresh(scoreBoard);
 }
 
 void get_empty_locale(Board *board, uint16_t *y, uint16_t *x) { // TODO: Add counter to check if board is full
@@ -48,6 +63,14 @@ void print_snake(Board *board) {
         mvwaddch(board->boardWin, tmp->piece.y, tmp->piece.x, SNAKE_ICON);
         tmp = tmp->nextPiece;
     }
+}
+
+void update_score(Board *board) {
+    char scoreStr[board->width];
+
+    snprintf(scoreStr, board->width, "%d", board->score); // TODO: Add statement to check if score has filled bar
+    mvwprintw(board->scoreBoard, SCOREBOARD_HEIGHT/2, board->width - strlen(scoreStr) - 1, scoreStr);
+    wrefresh(board->scoreBoard);
 }
 
 void end_prompt(Board *board) {

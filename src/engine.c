@@ -7,6 +7,7 @@ void init_window(Board **board, _Bool *initialized) {
     }
     (*board)->apple = NULL;
     (*board)->snakeParts = NULL;
+    clear_score((*board)->scoreBoard);
     clear_win((*board)->boardWin);
     (*board)->running = 1;
     while(((*board)->currentDirection = rand() % 5 - 2) == 0); // Generates -1, 1, 2, or -2
@@ -93,6 +94,7 @@ void update_state(Board *board) {
                 construct_apple(board, emptyY, emptyX);
                 PLACE_APPLE(board, APPLE);
                 board->score += 10;
+                update_score(board);
                 break;
             case SNAKE_ICON:
                 trunc_tail(board);

@@ -31,7 +31,7 @@ typedef struct {
 
 typedef struct {
     WINDOW *boardWin;
-    WINDOW scoreBoard;
+    WINDOW *scoreBoard;
     uint64_t score;
     _Bool running;
     uint16_t height;

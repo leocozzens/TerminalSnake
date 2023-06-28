@@ -3,9 +3,10 @@ CFLAGS = -Iinclude -g
 SRC = src
 OBJ = obj
 BINDIR = bin
+BIN_NAME = main.out
 SRCS = $(wildcard $(SRC)/*.c)
 OBJS = $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SRCS))
-BIN = $(BINDIR)/main.out
+BIN = $(BINDIR)/$(BIN_NAME)
 
 SUBMITNAME = terminalSnake.zip
 zip = zip
@@ -32,7 +33,7 @@ clean:
 	rm $(BINDIR)/* $(OBJ)/*
 
 create_dirs:
-	@mkdir -p bin obj
+	@mkdir -p $(BINDIR) $(OBJ)
 
 new: clean
 new: all
