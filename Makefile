@@ -3,12 +3,13 @@ CFLAGS = -Iinclude -g -Wall
 SRC = src
 OBJ = obj
 BINDIR = bin
-BIN_NAME = main.out
+PROJNAME = TerminalSnake
+BINNAME = $(PROJNAME).bin
 SRCS = $(wildcard $(SRC)/*.c)
 OBJS = $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SRCS))
-BIN = $(BINDIR)/$(BIN_NAME)
+BIN = $(BINDIR)/$(BINNAME)
 
-SUBMITNAME = terminalSnake.zip
+SUBMITNAME = $(PROJECT_NAME).zip
 zip = zip
 
 all: create_dirs
