@@ -1,4 +1,13 @@
+// C standard libraries
+#include <unistd.h>
+#include <stdint.h>
+
+// Local headers
 #include <engine.h>
+
+typedef struct timeval TimeVal;
+
+static int64_t get_utime(TimeVal *out);
 
 void init_window(Board **board, _Bool *initialized) {
     if(!(*initialized)) {
@@ -35,8 +44,9 @@ void play_round(Board *board) {
 
 void process_input(Board *board) {
     Direction tempDirection = board->currentDirection;
-    double startTime = get_elapsed_time();
-    wtimeout(board->boardWin, 10);
+    TimeVal startTime, endTime, elapsedTime;
+    gettimeofday(&startTime, NULL);
+    wtimeout(board->boardWin, CHECK_INTERVAL_MS);
     do {
         int16_t input = wgetch(board->boardWin);
         switch(input) {
@@ -59,20 +69,22 @@ void process_input(Board *board) {
             case 'p':
                 wtimeout(board->boardWin, -1);
                 while(wgetch(board->boardWin) != 'p'); // TODO: 3... 2... 1... Pause on first frame
-                wtimeout(board->boardWin, TURN_DURATION);
+                wtimeout(board->boardWin, CHECK_INTERVAL_MS);
                 continue;
                 break;
             default:
                 break;
         }
-    } while((get_elapsed_time() - startTime) < TURN_DURATION);
+        gettimeofday(&endTime, NULL);
+        timersub(&endTime, &startTime, &elapsedTime);
+    } while(get_utime(&elapsedTime) < (TURN_DURATION_MS - CHECK_INTERVAL_MS) * 1000);
+    int64_t remainingTime = TURN_DURATION_MS * 1000 - get_utime(&elapsedTime);
+    (remainingTime > 0) ? usleep(remainingTime) : 0;
     board->currentDirection = tempDirection;
 }
 
-double get_elapsed_time( void) { // TODO: Add portable windows method
-    struct timeval start;
-    gettimeofday(&start, NULL);
-    return (start.tv_sec * 1000.0) + (start.tv_usec / 1000.0);
+static int64_t get_utime(TimeVal *out) {
+    return out->tv_usec + (out->tv_sec * 1000000);
 }
 
 void set_direction(Direction lastDirection, Direction newDirection, Direction *tempDirection) {

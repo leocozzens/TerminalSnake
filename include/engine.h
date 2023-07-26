@@ -8,12 +8,12 @@
 #include <constructors.h>
 #include <display.h>
 
-#define TURN_DURATION 130 // In milliseconds
+#define TURN_DURATION_MS 130
+#define CHECK_INTERVAL_MS 10
 
 void init_window(Board **board, _Bool *initialized);
 void play_round(Board *board);
 void process_input(Board *board);
-double get_elapsed_time(void);
 void set_direction(Direction lastDirection, Direction newDirection, Direction *tempDirection);
 void update_state(Board *board);
 void place_head(Board *board);
