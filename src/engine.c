@@ -2,6 +2,9 @@
 #include <unistd.h>
 #include <stdint.h>
 
+// POSIX headers
+#include <sys/time.h>
+
 // Local headers
 #include <engine.h>
 
@@ -37,12 +40,19 @@ void init_window(Board **board, _Bool *initialized) {
 }
 
 void play_round(Board *board) {
-    process_input(board);
+    TimeVal startTime, endTime, elapsedTime;
+    startTime = process_input(board);
+
     update_state(board);
     wrefresh(board->boardWin);
+
+    gettimeofday(&endTime, NULL);
+    timersub(&endTime, &startTime, &elapsedTime);
+    int64_t remainingTime = TURN_DURATION_MS * 1000 - get_utime(&elapsedTime);
+    if(remainingTime > 0) usleep(remainingTime);
 }
 
-void process_input(Board *board) {
+TimeVal process_input(Board *board) {
     Direction tempDirection = board->currentDirection;
     TimeVal startTime, endTime, elapsedTime;
     gettimeofday(&startTime, NULL);
@@ -78,9 +88,8 @@ void process_input(Board *board) {
         gettimeofday(&endTime, NULL);
         timersub(&endTime, &startTime, &elapsedTime);
     } while(get_utime(&elapsedTime) < (TURN_DURATION_MS - CHECK_INTERVAL_MS) * 1000);
-    int64_t remainingTime = TURN_DURATION_MS * 1000 - get_utime(&elapsedTime);
-    (remainingTime > 0) ? usleep(remainingTime) : 0;
     board->currentDirection = tempDirection;
+    return startTime;
 }
 
 static int64_t get_utime(TimeVal *out) {
