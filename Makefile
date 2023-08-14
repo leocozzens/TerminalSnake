@@ -31,7 +31,7 @@ link: $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(BIN)
 
 clean:
-	rm $(BINDIR)/* $(OBJ)/*
+	rm -rf $(BINDIR) $(OBJ)
 
 create_dirs:
 	@mkdir -p $(BINDIR) $(OBJ)
