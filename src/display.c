@@ -47,7 +47,7 @@ static Dimension *determine_screen_size(uint32_t boardScale, uint32_t startLen, 
 }
 
 // Public functions
-_Bool display_init(Board *gameBoard, uint32_t boardScale, uint32_t startLen, char **errRet) {
+_Bool display_init(struct _Board *gameBoard, uint32_t boardScale, uint32_t startLen, char **errRet) {
     initscr();
     cbreak();
     noecho();

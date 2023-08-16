@@ -4,7 +4,7 @@
 #include <shared_data.h>
 #include <display.h>
 
-_Bool game_init(Board *gameBoard, uint32_t boardScale, uint32_t startLen) {
+_Bool game_init(struct _Board *gameBoard, uint32_t boardScale, uint32_t startLen) {
     char *err = NULL;
     if(display_init(gameBoard, boardScale, startLen, &err)) {
         display_kill();
