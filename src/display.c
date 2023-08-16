@@ -40,6 +40,10 @@ static Dimension *determine_screen_size(uint32_t boardScale, uint32_t startLen, 
     }
 
     Dimension *windowDimension = malloc(sizeof(Dimension));
+    if(windowDimension == NULL) {
+        *errRet = "Memory allocation error";
+        return NULL;
+    }
     windowDimension->height = height;
     windowDimension->width = width;
 
@@ -53,8 +57,8 @@ _Bool display_init(struct _Board *gameBoard, uint32_t boardScale, uint32_t start
     noecho();
     curs_set(0);
 
-    Dimension *windowDimension = determine_screen_size(boardScale, startLen, errRet);
-    if(windowDimension == NULL) return 1;
+    gameBoard->windowDimension = determine_screen_size(boardScale, startLen, errRet);
+    if(gameBoard->windowDimension == NULL) return 1;
 
     return 0;
 }
