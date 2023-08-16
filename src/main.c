@@ -9,11 +9,11 @@ int main(int argc, char **argv) {
     Board gameBoard = { 0x0 };
 
     if(game_init(&gameBoard, BOARD_SCALE, START_LENGTH)) return 1;
-    _Bool gameRunning;
+    int gameState;
+    char *err;
     do {
-        game_play_round(&gameRunning);
-    } while(gameRunning);
+        game_play_round(&gameState, &err);
+    } while(gameState == RUNNING);
 
-    game_end(&gameBoard);
-    return 0;
+    return game_end(&gameBoard, gameState);
 }
