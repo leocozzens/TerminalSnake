@@ -6,7 +6,7 @@
 #define START_LENGTH 4
 
 int main(int argc, char **argv) {
-    Board gameBoard;
+    Board gameBoard = { 0x0 };
 
     if(game_init(&gameBoard, BOARD_SCALE, START_LENGTH)) return 1;
     _Bool gameRunning;
@@ -14,6 +14,6 @@ int main(int argc, char **argv) {
         game_play_round(&gameRunning);
     } while(gameRunning);
 
-    game_end();
+    game_end(&gameBoard);
     return 0;
 }

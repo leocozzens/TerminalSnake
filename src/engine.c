@@ -1,5 +1,6 @@
 // C standard library
 #include <stdio.h>
+#include <stdlib.h>
 // Local headers
 #include <shared_data.h>
 #include <display.h>
@@ -19,6 +20,7 @@ void game_play_round(_Bool *gameRunning) {
     display_wait_input();
 }
 
-void game_end(void) {
+void game_end(struct _Board *gameBoard) {
     display_kill();
+    free(gameBoard->windowDimension);
 }
