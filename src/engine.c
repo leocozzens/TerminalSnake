@@ -19,16 +19,16 @@ _Bool game_init(struct _Board *gameBoard, uint32_t boardScale, uint32_t startLen
     return 0;
 }
 
-void game_play_round(int *gameState, char **err) {
-    *gameState = EXIT_NO_ERR;
+int game_play_round(char **gameErr) {
     display_wait_input();
+    return EXIT_NO_ERR;
 }
 
-int game_end(struct _Board *gameBoard, int gameState, char *err) {
+int game_end(struct _Board *gameBoard, int gameState, char *gameErr) {
     display_kill();
     free(gameBoard->windowDimension);
     if(gameState == EXIT_ERR) {
-        fprintf(stderr, "ERROR: %s", err);
+        fprintf(stderr, "ERROR: %s\n", gameErr);
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;

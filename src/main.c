@@ -10,10 +10,10 @@ int main(int argc, char **argv) {
 
     if(game_init(&gameBoard, BOARD_SCALE, START_LENGTH)) return 1;
     int gameState;
-    char *err;
+    char *gameErr;
     do {
-        game_play_round(&gameState, &err);
+        gameState = game_play_round(&gameErr);
     } while(gameState == RUNNING);
 
-    return game_end(&gameBoard, gameState);
+    return game_end(&gameBoard, gameState, gameErr);
 }
