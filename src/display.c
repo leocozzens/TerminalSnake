@@ -1,11 +1,10 @@
 // C standard library
 #include <stdlib.h>
-#include <errno.h>
+#include <stdint.h>
 // External libraries
 #include <ncurses.h>
 // Local headers
 #include <shared_data.h>
-#include <display.h>
 
 #define BOARD_SCALE_FACTOR 2.5
 

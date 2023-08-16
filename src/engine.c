@@ -18,3 +18,7 @@ void game_play_round(_Bool *gameRunning) {
     *gameRunning = 0;
     display_wait_input();
 }
+
+void game_end(void) {
+    display_kill();
+}
