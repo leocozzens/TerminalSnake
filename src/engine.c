@@ -26,7 +26,6 @@ int game_play_round(char **gameErr) {
 
 int game_end(struct _Board *gameBoard, int gameState, char *gameErr) {
     display_kill();
-    free(gameBoard->windowDimension);
     if(gameState == EXIT_ERR) {
         fprintf(stderr, "ERROR: %s\n", gameErr);
         return EXIT_FAILURE;

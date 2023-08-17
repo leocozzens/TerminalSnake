@@ -8,46 +8,27 @@
 
 #define BOARD_SCALE_FACTOR 2.5
 
-struct _Dimension {
-    union {
-        uint32_t y;
-        uint32_t height;
-    };
-    union {
-        uint32_t x;
-        uint32_t width;
-    };
-};
-
 // Static functions
-static Dimension *determine_screen_size(uint32_t boardScale, uint32_t startLen, char **errRet) {
-    uint32_t yMax, xMax, height, width;
+static _Bool determine_screen_size(Dimension *newDimension, uint32_t boardScale, uint32_t startLen, char **errRet) {
+    uint32_t yMax, xMax;
     getmaxyx(stdscr, yMax, xMax);
 
-    if(boardScale == 0) height = yMax;
+    if(boardScale == 0) newDimension->height = yMax;
     else {
         if(boardScale < startLen) {
             *errRet = "Specified board size is smaller than starting snake length";
-            return NULL;
+            return 1;
         }
-        height = boardScale;
+        newDimension->height = boardScale;
     }
 
-    width = yMax * BOARD_SCALE_FACTOR;
-    if(width > xMax || height < startLen) {
+    newDimension->width = yMax * BOARD_SCALE_FACTOR;
+    if(newDimension->width > xMax || newDimension->height > yMax || yMax < startLen) {
         *errRet = "Terminal size too small";
-        return NULL;
+        return 1;
     }
 
-    Dimension *windowDimension = malloc(sizeof(Dimension));
-    if(windowDimension == NULL) {
-        *errRet = "Memory allocation error";
-        return NULL;
-    }
-    windowDimension->height = height;
-    windowDimension->width = width;
-
-    return windowDimension;
+    return 0;
 }
 
 // Public functions
@@ -56,9 +37,7 @@ _Bool display_init(struct _Board *gameBoard, uint32_t boardScale, uint32_t start
     cbreak();
     noecho();
     curs_set(0);
-
-    gameBoard->windowDimension = determine_screen_size(boardScale, startLen, errRet);
-    if(gameBoard->windowDimension == NULL) return 1;
+    if(determine_screen_size(&gameBoard->windowDimension, boardScale, startLen, errRet)) return 1;
 
     return 0;
 }
