@@ -1,5 +1,5 @@
 // Local headers
-#include <shared_data.h>
+#include <board.h>
 #include <engine.h>
 
 #define EXIT_FAILURE 1
@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
 
     int gameState;
     char *gameErr;
-    do { gameState = game_play_round(&gameErr); } while(gameState == RUNNING);
+    do { gameState = game_play_round(&gameBoard, &gameErr); } while(gameState == RUNNING);
 
     return game_end(&gameBoard, gameState, gameErr);
 }

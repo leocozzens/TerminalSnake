@@ -9,8 +9,8 @@
 
 struct _Board;
 
-_Bool game_init(struct _Board *gameBoard, uint32_t boardScale, uint32_t startLen);
-int game_play_round(char **gameErr);
+_Bool game_init(struct _Board *gameBoard, uint32_t winScale, uint32_t startLen);
+int game_play_round(struct _Board *gameBoard, char **gameErr);
 int game_end(struct _Board *gameBoard, int gameState, char *gameErr);
 
 #endif

@@ -3,9 +3,7 @@
 
 #include <stdint.h>
 
-typedef struct _win_st WINDOW;
-
-typedef struct {
+typedef struct _Dimension {
     union {
         uint32_t y;
         uint32_t height;
@@ -16,9 +14,9 @@ typedef struct {
     };
 } Dimension;
 
-typedef struct _Board {
-    WINDOW *gameWindow;
-    Dimension windowDimension;
-} Board;
+typedef struct _Graphic {
+    Dimension point;
+    char visual;
+} Graphic;
 
 #endif
