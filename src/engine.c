@@ -11,16 +11,20 @@
 #define EXIT_NO_ERR 0
 #define EXIT_ERR    -1
 
-#define FOOD 'A'
+#define APPLE       'A'
+#define PEAR        'P'
 
 // Static functions
 static void new_food(Board *gameBoard) {
-    construct_food(&gameBoard->gameFood, display_get_empty_locale(gameBoard->gameWindow, gameBoard->windowDimension), FOOD);
+    construct_food(&gameBoard->gameFood, display_get_empty_locale(gameBoard->gameWindow, gameBoard->windowDimension), APPLE);
     display_print_object(&gameBoard->gameFood.graphic, gameBoard->gameWindow);
 }
 
 static void update_state(Board *gameBoard) {
-    if(gameBoard->gameFood.eaten) new_food(gameBoard);
+    if(gameBoard->gameFood.eaten) {
+        display_clear_object(gameBoard->gameFood.graphic.point, gameBoard->gameWindow);
+        new_food(gameBoard);
+    }
     display_refresh_win(gameBoard->gameWindow);
 }
 
@@ -45,7 +49,7 @@ _Bool game_init(struct _Board *gameBoard, uint32_t winScale, uint32_t startLen) 
 int game_play_round(struct _Board *gameBoard, char **gameErr) {
     update_state(gameBoard);
     handle_input(gameBoard);
-    return EXIT_NO_ERR;
+    return RUNNING;
 }
 
 int game_end(struct _Board *gameBoard, int gameState, char *gameErr) {
