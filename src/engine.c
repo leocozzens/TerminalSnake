@@ -4,20 +4,29 @@
 #include <time.h>
 // Local headers
 #include <board.h>
+#include <engine.h>
 #include <display.h>
 #include <model.h>
-
-#define RUNNING     1
-#define EXIT_NO_ERR 0
-#define EXIT_ERR    -1
 
 #define APPLE       'A'
 #define PEAR        'P'
 
 // Static functions
+static WINDOW* gameWin;
+
+static Direction random_direction(void) {
+    Direction randDirection;
+    while((randDirection = rand() % 5 - 2) == 0); // Generates -1, 1, 2, or -2
+    return randDirection;
+}
+
 static void new_food(Board *gameBoard) {
-    construct_food(&gameBoard->gameFood, display_get_empty_locale(gameBoard->gameWindow, gameBoard->windowDimension), APPLE);
-    display_print_object(&gameBoard->gameFood.graphic, gameBoard->gameWindow);
+    model_construct_food(&gameBoard->gameFood, display_get_empty_locale(gameBoard->gameWindow, gameBoard->windowDimension), APPLE);
+    display_print_graphic(&gameBoard->gameFood.graphic, gameBoard->gameWindow);
+}
+
+static void set_win(WINDOW *win) {
+    gameWin = win;
 }
 
 static void update_state(Board *gameBoard) {
@@ -32,7 +41,6 @@ static void handle_input(Board *gameBoard) {
     display_wait_input();
 }
 
-
 // Public functions
 _Bool game_init(struct _Board *gameBoard, uint32_t winScale, uint32_t startLen) {
     char *err = NULL;
@@ -42,14 +50,22 @@ _Bool game_init(struct _Board *gameBoard, uint32_t winScale, uint32_t startLen) 
         fprintf(stderr, "ERROR: %s\n", err);
         return 1;
     }
+    gameBoard->activeDirection = random_direction();
+    model_init_snake(gameBoard->activeDirection, gameBoard->windowDimension, startLen, BORDER_SIZE, '#', '#');
+    set_win(gameBoard->gameWindow);
+    model_run_for_each(game_display_unit);
     new_food(gameBoard);
     return 0;
+}
+
+void game_display_unit(struct _Dimension unitPoint, char visual) {
+    display_print_object(unitPoint, visual, gameWin);
 }
 
 int game_play_round(struct _Board *gameBoard, char **gameErr) {
     update_state(gameBoard);
     handle_input(gameBoard);
-    return RUNNING;
+    return EXIT_NO_ERR;
 }
 
 int game_end(struct _Board *gameBoard, int gameState, char *gameErr) {

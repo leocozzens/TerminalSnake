@@ -11,6 +11,7 @@ typedef struct _Food {
 } Food;
 
 typedef struct _Board {
+    Direction activeDirection;
     Food gameFood;
     WINDOW *gameWindow;
     Dimension windowDimension;

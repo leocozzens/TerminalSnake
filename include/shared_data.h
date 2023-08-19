@@ -3,6 +3,13 @@
 
 #include <stdint.h>
 
+typedef enum {
+    UP = -1,
+    DOWN = 1,
+    LEFT = -2,
+    RIGHT = 2
+} Direction;
+
 typedef struct _Dimension {
     union {
         uint32_t y;

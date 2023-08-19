@@ -7,8 +7,9 @@
 #include <shared_data.h>
 
 #define BOARD_SCALE_FACTOR 2.5
+#define BORDER_SIZE        2
 
-#define EMPTY_SPACE ' '
+#define EMPTY_SPACE        ' '
 
 // Static functions
 static _Bool determine_screen_size(Dimension *newDimension, uint32_t winScale, uint32_t startLen, Dimension *centerVals, char **errRet) {
@@ -22,7 +23,7 @@ static _Bool determine_screen_size(Dimension *newDimension, uint32_t winScale, u
         else newDimension->width = xMax;
     }
     else {
-        if(winScale < startLen) {
+        if(winScale < (startLen + BORDER_SIZE)) {
             *errRet = "Specified board size is smaller than starting snake length";
             return 1;
         }
@@ -31,7 +32,7 @@ static _Bool determine_screen_size(Dimension *newDimension, uint32_t winScale, u
 
     if(yScaled) newDimension->width = yMax * BOARD_SCALE_FACTOR;
     else newDimension->height = xMax / BOARD_SCALE_FACTOR;
-    if(newDimension->width > xMax || newDimension->height > yMax || yMax < startLen) {
+    if(newDimension->width > xMax || newDimension->height > yMax || newDimension->height < (startLen + BORDER_SIZE)) {
         *errRet = "Terminal size too small";
         return 1;
     }
@@ -67,14 +68,18 @@ _Bool display_init(WINDOW **gameWin, struct _Dimension *winDim, uint32_t boardSc
 Dimension display_get_empty_locale(WINDOW *win, struct _Dimension winDim) {
     Dimension newDim;
     do {
-        newDim.y = rand() % (winDim.height - 1);
-        newDim.x = rand() % (winDim.width - 1);
+        newDim.y = rand() % (winDim.height - BORDER_SIZE) + BORDER_SIZE / 2;
+        newDim.x = rand() % (winDim.width - BORDER_SIZE) + BORDER_SIZE / 2;
     } while(mvwinch(win, newDim.y, newDim.x) != EMPTY_SPACE);
     return newDim;
 }
 
-void display_print_object(struct _Graphic *object, WINDOW *win) {
-    mvwaddch(win, object->point.y, object->point.x, object->visual);
+void display_print_graphic(struct _Graphic *graphic, WINDOW *win) {
+    mvwaddch(win, graphic->point.y, graphic->point.x, graphic->visual);
+}
+
+void display_print_object(struct _Dimension objectPoint, char visual, WINDOW *win) {
+    mvwaddch(win, objectPoint.y, objectPoint.x, visual);
 }
 
 void display_clear_object(struct _Dimension objectPoint, WINDOW *win) {
