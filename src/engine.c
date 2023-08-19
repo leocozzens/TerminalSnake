@@ -7,34 +7,34 @@
 #include <engine.h>
 #include <display.h>
 #include <model.h>
+#include <helpers.h>
 
 #define APPLE       'A'
 #define PEAR        'P'
 
 // Static functions
 static WINDOW* gameWin;
-
-static Direction random_direction(void) {
-    Direction randDirection;
-    while((randDirection = rand() % 5 - 2) == 0); // Generates -1, 1, 2, or -2
-    return randDirection;
-}
-
 static void new_food(Board *gameBoard) {
-    model_construct_food(&gameBoard->gameFood, display_get_empty_locale(gameBoard->gameWindow, gameBoard->windowDimension), APPLE);
-    display_print_graphic(&gameBoard->gameFood.graphic, gameBoard->gameWindow);
-}
-
-static void set_win(WINDOW *win) {
-    gameWin = win;
+    model_construct_food(&gameBoard->gameFood, display_get_empty_locale(gameWin, gameBoard->windowDimension), gameBoard->foodTypes.types[rand() % gameBoard->foodTypes.typeCount]);
+    display_print_graphic(&gameBoard->gameFood.graphic, gameWin);
 }
 
 static void update_state(Board *gameBoard) {
+    Dimension nextHead = help_get_next_head(gameBoard->activeDirection, model_get_head());
+    switch(display_check_collision(nextHead, gameBoard->foodTypes.types, gameBoard->foodTypes.typeCount, gameWin)) {
+        case NONE:
+            break;
+        case FOOD:
+            break;
+        case OTHER:
+            break;
+    }
+
     if(gameBoard->gameFood.eaten) {
-        display_clear_object(gameBoard->gameFood.graphic.point, gameBoard->gameWindow);
+        display_clear_object(gameBoard->gameFood.graphic.point, gameWin);
         new_food(gameBoard);
     }
-    display_refresh_win(gameBoard->gameWindow);
+    display_refresh_win(gameWin);
 }
 
 static void handle_input(Board *gameBoard) {
@@ -45,16 +45,19 @@ static void handle_input(Board *gameBoard) {
 _Bool game_init(struct _Board *gameBoard, uint32_t winScale, uint32_t startLen) {
     char *err = NULL;
     srand(time(NULL));
-    if(display_init(&gameBoard->gameWindow, &gameBoard->windowDimension, winScale, startLen, &err)) {
+    if(display_init(&gameWin, &gameBoard->windowDimension, winScale, startLen, &err)) {
         display_kill();
         fprintf(stderr, "ERROR: %s\n", err);
         return 1;
     }
-    gameBoard->activeDirection = random_direction();
+    gameBoard->activeDirection = help_random_direction();
     model_init_snake(gameBoard->activeDirection, gameBoard->windowDimension, startLen, BORDER_SIZE, '#', '#');
-    set_win(gameBoard->gameWindow);
+    model_init_food_types(&gameBoard->foodTypes);
+    model_add_food_type(&gameBoard->foodTypes, APPLE);
+    model_add_food_type(&gameBoard->foodTypes, PEAR); // TODO: Handle exceptions here
     model_run_for_each(game_display_unit);
     new_food(gameBoard);
+    display_refresh_win(gameWin);
     return 0;
 }
 
@@ -63,8 +66,8 @@ void game_display_unit(struct _Dimension unitPoint, char visual) {
 }
 
 int game_play_round(struct _Board *gameBoard, char **gameErr) {
-    update_state(gameBoard);
     handle_input(gameBoard);
+    update_state(gameBoard);
     return EXIT_NO_ERR;
 }
 

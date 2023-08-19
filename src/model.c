@@ -1,12 +1,9 @@
 // C standard library
 #include <stdlib.h>
 // Local headers
-#include <shared_data.h>
+#include <food.h>
 
-typedef struct _Food {
-    Graphic graphic;
-    _Bool eaten;
-} Food;
+#define FOOD_TYPE_BUFF 10
 
 typedef struct _SnakeUnit {
     Dimension unit;
@@ -72,6 +69,24 @@ static void enqueue(SnakeUnit *newUnit) {
 }
 
 // Public functions
+_Bool model_init_food_types(struct _FoodTypes *typeStore) {
+    typeStore->types = malloc(FOOD_TYPE_BUFF);
+    if(typeStore->types == NULL) return 1;
+    typeStore->typeCount = 0;
+    return 0;
+}
+
+_Bool model_add_food_type(struct _FoodTypes *typeStore, char newType) {
+    static uint16_t resizes = 1;
+    if((typeStore->typeCount + 1) > (FOOD_TYPE_BUFF * resizes)) {
+        char *tmp = realloc(typeStore->types, FOOD_TYPE_BUFF * ++resizes);
+        if(tmp == NULL) return 1;
+        typeStore->types = tmp;
+    }
+    typeStore->types[typeStore->typeCount++] = newType;
+    return 0;
+}
+
 _Bool model_init_snake(Direction startDirection, struct _Dimension winDim, uint32_t startLen, uint32_t borderOffset, char headVis, char bodyVis) {
     init_queue(headVis, bodyVis);
     Dimension startPoint = generate_start_point(startDirection, winDim, startLen, borderOffset);
@@ -111,4 +126,9 @@ void model_construct_food(struct _Food *gameFood, struct _Dimension emptyPoint, 
     gameFood->eaten = 0;
     gameFood->graphic.point = emptyPoint;
     gameFood->graphic.visual = foodVisual;
+}
+
+
+Dimension model_get_head(void) {
+    return body.head->unit;
 }

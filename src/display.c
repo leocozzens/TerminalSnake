@@ -11,6 +11,12 @@
 
 #define EMPTY_SPACE        ' '
 
+typedef enum {
+    NONE,
+    FOOD,
+    OTHER
+} Collision;
+
 // Static functions
 static _Bool determine_screen_size(Dimension *newDimension, uint32_t winScale, uint32_t startLen, Dimension *centerVals, char **errRet) {
     uint32_t yMax, xMax;
@@ -88,6 +94,15 @@ void display_clear_object(struct _Dimension objectPoint, WINDOW *win) {
 
 void display_refresh_win(WINDOW *win) {
     wrefresh(win);
+}
+
+Collision display_check_collision(struct _Dimension objectPoint, char *food, uint16_t foodTypes, WINDOW *win) {
+    char visual = mvwinch(win, objectPoint.y, objectPoint.x);
+    if(visual == EMPTY_SPACE) return NONE;
+    for(int i = 0; i < foodTypes; i++) {
+        if(visual == food[i]) return FOOD;
+    }
+    return OTHER;
 }
 
 void display_kill(void) {

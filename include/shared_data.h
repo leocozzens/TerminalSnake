@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-typedef enum {
+typedef enum _Direction {
     UP = -1,
     DOWN = 1,
     LEFT = -2,
