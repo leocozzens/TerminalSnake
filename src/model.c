@@ -85,7 +85,7 @@ _Bool model_init_food_types(struct _FoodTypes *typeStore) {
 }
 
 _Bool model_add_food_type(struct _FoodTypes *typeStore, char newType) {
-    static uint16_t resizes = 1;
+    static uint16_t resizes = 0;
     if(typeStore->typeCount >= expo(FOOD_TYPE_BUFF, resizes)) {
         char *tmp = realloc(typeStore->types, expo(FOOD_TYPE_BUFF, ++resizes));
         if(tmp == NULL) return 1;
