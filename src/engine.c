@@ -9,8 +9,8 @@
 #include <model.h>
 #include <helpers.h>
 
-#define APPLE       'A'
-#define PEAR        'P'
+#define APPLE   'A'
+#define PEAR    'P'
 
 // Static functions
 static WINDOW* gameWin;
@@ -23,13 +23,18 @@ static void update_state(Board *gameBoard) {
     Dimension nextHead = help_get_next_head(gameBoard->activeDirection, model_get_head());
     switch(display_check_collision(nextHead, gameBoard->foodTypes.types, gameBoard->foodTypes.typeCount, gameWin)) {
         case NONE:
+            // display clear tail
+            // model recycle unit
             break;
         case FOOD:
+            // model make new unit 
             break;
         case OTHER:
+            // end game
             break;
     }
-
+    // model add head
+    // display print head
     if(gameBoard->gameFood.eaten) {
         display_clear_object(gameBoard->gameFood.graphic.point, gameWin);
         new_food(gameBoard);

@@ -5,7 +5,7 @@
 
 enum _Direction help_random_direction(void) {
     Direction randDirection;
-    while((randDirection = rand() % 5 - 2) == 0); // Generates -1, 1, 2, or -2
+    while((randDirection = rand() % 5 - 2) == 0); // Generates -1, 1, -2, or 2
     return randDirection;
 }
 

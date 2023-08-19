@@ -3,7 +3,7 @@
 // Local headers
 #include <food.h>
 
-#define FOOD_TYPE_BUFF 10
+#define FOOD_TYPE_BUFF 2
 
 typedef struct _SnakeUnit {
     Dimension unit;
@@ -68,6 +68,14 @@ static void enqueue(SnakeUnit *newUnit) {
     body.head = newUnit;
 }
 
+static uint64_t expo(uint64_t x, uint64_t y) {
+    uint64_t z = x;
+    for(int i = 0; i < y; i++) {
+        z *= x;
+    }
+    return z;
+}
+
 // Public functions
 _Bool model_init_food_types(struct _FoodTypes *typeStore) {
     typeStore->types = malloc(FOOD_TYPE_BUFF);
@@ -78,8 +86,8 @@ _Bool model_init_food_types(struct _FoodTypes *typeStore) {
 
 _Bool model_add_food_type(struct _FoodTypes *typeStore, char newType) {
     static uint16_t resizes = 1;
-    if((typeStore->typeCount + 1) > (FOOD_TYPE_BUFF * resizes)) {
-        char *tmp = realloc(typeStore->types, FOOD_TYPE_BUFF * ++resizes);
+    if(typeStore->typeCount >= expo(FOOD_TYPE_BUFF, resizes)) {
+        char *tmp = realloc(typeStore->types, expo(FOOD_TYPE_BUFF, ++resizes));
         if(tmp == NULL) return 1;
         typeStore->types = tmp;
     }
