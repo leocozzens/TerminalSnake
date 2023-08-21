@@ -68,7 +68,7 @@ static void enqueue(SnakeUnit *newUnit) {
     body.head = newUnit;
 }
 
-static uint64_t expo(uint64_t x, uint64_t y) {
+static uint64_t expo(uint64_t x, uint8_t y) {
     uint64_t z = x;
     for(int i = 0; i < y; i++) {
         z *= x;
@@ -85,7 +85,7 @@ _Bool model_init_food_types(struct _FoodTypes *typeStore) {
 }
 
 _Bool model_add_food_type(struct _FoodTypes *typeStore, char newType) {
-    static uint16_t resizes = 0;
+    static uint8_t resizes = 0;
     if(typeStore->typeCount >= expo(FOOD_TYPE_BUFF, resizes)) {
         char *tmp = realloc(typeStore->types, expo(FOOD_TYPE_BUFF, ++resizes));
         if(tmp == NULL) return 1;
